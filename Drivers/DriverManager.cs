@@ -5,12 +5,21 @@ namespace Muhammad.Automation.Framework.Drivers;
 
 public class DriverManager
 {
-    public static IWebDriver CreateDriver(string browser = "chrome")
+    public static IWebDriver CreateDriver(string browser)
     {
-        return browser.ToLower() switch
+        if (browser.ToLower() == "chrome")
         {
-            "chrome" => new ChromeDriver(),
-            _ => throw new ArgumentException("Browser not supported")
-        };
+            var options = new ChromeOptions();
+
+            options.AddArgument("--headless");
+            options.AddArgument("--no-sandbox");
+            options.AddArgument("--disable-dev-shm-usage");
+            options.AddArgument("--disable-gpu");
+            options.AddArgument("--window-size=1920,1080");
+
+            return new ChromeDriver(options);
+        }
+
+        throw new ArgumentException("Browser not supported");
     }
 }
